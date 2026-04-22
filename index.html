@@ -376,7 +376,7 @@
      3. Copia el enlace y pégalo aquí abajo entre comillas
      ═══════════════════════════════════════════════════════ -->
 <script>
-  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjxyb0ET5RHKBnRXnu40RMnIhS1ndTfjPa2XYmaS2VNdjrCtXD281cjDPino5s0H4NYrBqFRKUrK9-/pub?output=csv';  // 👈 PEGA AQUÍ TU URL DE GOOGLE SHEETS (CSV)
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjxyb0ET5RHKBnRXnu4ORMnlhS1ndTfjPa2XYmaS2VNdjrCtXD281cjDPino5sOH4NYrBqFRKUrK9-/pub?output=csv';  // 👈 PEGA AQUÍ TU URL DE GOOGLE SHEETS (CSV)
   const REFRESH_SECONDS = 60; // actualiza cada 60 segundos
 </script>
 <!-- ═══════════════════════════════════════════════════════ -->
@@ -778,7 +778,8 @@ async function fetchAndUpdate() {
 
   try {
     document.getElementById('setup-banner').classList.add('hidden');
-    const res = await fetch(SHEET_CSV_URL + '&cachebust=' + Date.now());
+    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(SHEET_CSV_URL);
+    const res = await fetch(proxyUrl);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
     const parsed = parseCSV(text);
