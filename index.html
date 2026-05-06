@@ -8,19 +8,27 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #07090f;
-      --surface: #0f1420;
-      --surface2: #161d2e;
-      --border: #1e2a42;
-      --primary: #7c86f5;
-      --accent: #f0a050;
-      --green: #4ade80;
-      --pink: #f472b6;
-      --teal: #2dd4bf;
-      --red: #fb7185;
-      --text: #e4eaf8;
-      --muted: #7a89ab;
-      --card-radius: 18px;
+      --bg: #fafafa;
+      --bg2: #f4f4f5;
+      --surface: #ffffff;
+      --surface2: #f9f9fb;
+      --border: #e5e5e7;
+      --primary: #6b7280;       /* gris pizarra */
+      --primary-soft: #9ca3af;
+      --accent: #475569;        /* slate oscuro */
+      --indigo: #6366f1;        /* índigo accent */
+      --green: #10b981;         /* esmeralda */
+      --amber: #f59e0b;         /* ámbar */
+      --rose: #f43f5e;          /* rosa intenso accent */
+      --teal: #14b8a6;          /* teal moderno */
+      --violet: #8b5cf6;        /* violeta */
+      --sky: #0ea5e9;           /* azul cielo */
+      --text: #18181b;          /* casi negro */
+      --text2: #3f3f46;
+      --muted: #71717a;
+      --card-radius: 16px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+      --shadow-hover: 0 10px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,17 +42,175 @@
       overflow-x: hidden;
     }
 
-    /* ── BACKGROUND GRID ── */
+    /* ── PATRÓN DE PUNTOS SUTIL ── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(124,134,245,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(124,134,245,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.025) 1px, transparent 1px);
+      background-size: 24px 24px;
       pointer-events: none;
       z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(60px);
+    }
+
+
+    /* ── ANIMACIONES DINÁMICAS ── */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(3deg); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(30px, -20px); }
+      66% { transform: translate(-20px, 20px); }
+    }
+
+    /* ── DECORACIONES FLOTANTES EN HERO ── */
+    .floater {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.5;
+      animation: float 6s ease-in-out infinite;
+    }
+    .floater.f1 { top: 60px; right: 18%; animation-delay: 0s; }
+    .floater.f2 { top: 150px; right: 8%; animation-delay: 2s; }
+    .floater.f3 { top: 220px; right: 25%; animation-delay: 4s; }
+
+    /* ── BADGE DE TENDENCIA EN STAT BOXES ── */
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--green);
+      margin-top: 4px;
+      letter-spacing: 0.3px;
+    }
+    .stat-badge::before {
+      content: '↗';
+      font-size: 12px;
+    }
+
+    /* ── KPI CARDS — tarjetas resumen ── */
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      padding: 24px 26px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+    .kpi-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 80px; height: 80px;
+      background: var(--accent-color, var(--indigo));
+      opacity: 0.06;
+      border-radius: 50%;
+      transform: translate(30%, -30%);
+    }
+    .kpi-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .kpi-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .kpi-suffix {
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 400;
+      margin-left: 4px;
+    }
+    .kpi-bar {
+      margin-top: 14px;
+      height: 6px;
+      background: var(--bg2);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .kpi-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .kpi-trend {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── CARD CON LÍNEA DE COLOR LATERAL ── */
+    .card.accent-left {
+      padding-left: 30px;
+    }
+    .card.accent-left::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      bottom: 20%;
+      width: 3px;
+      background: var(--accent-color, var(--indigo));
+      border-radius: 0 3px 3px 0;
+    }
+
+    /* ── CHART CARDS variants ── */
+    .card.spotlight {
+      background: linear-gradient(135deg, var(--surface) 0%, #fafafa 100%);
+      border: 1px solid var(--text);
+    }
+
+    /* ── HOVER en numeros stats ── */
+    .stat-num {
+      transition: color 0.2s ease;
+    }
+    .stat-box:hover .stat-num {
+      color: var(--indigo);
     }
 
     /* ── HERO ── */
@@ -63,41 +229,55 @@
 
     .hero-glow {
       position: absolute;
-      top: -80px;
+      top: -100px;
       left: 50%;
       transform: translateX(-50%);
-      width: 600px;
-      height: 300px;
-      background: radial-gradient(ellipse, rgba(124,134,245,0.15) 0%, transparent 70%);
+      width: 700px;
+      height: 350px;
+      background: radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 70%);
       pointer-events: none;
+      filter: blur(30px);
     }
 
     .hero-left { flex: 1; min-width: 280px; }
 
     .hero-tag {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 2.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--primary);
-      border: 1px solid rgba(124,134,245,0.35);
-      padding: 5px 14px;
-      border-radius: 100px;
+      color: var(--accent);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 8px;
       margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .hero-tag::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--indigo);
+      border-radius: 50%;
     }
 
     h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(28px, 4vw, 46px);
+      font-size: clamp(32px, 4.5vw, 52px);
       font-weight: 700;
-      line-height: 1.15;
-      color: #fff;
+      line-height: 1.1;
+      color: var(--text);
+      letter-spacing: -1.2px;
     }
 
     h1 em {
       font-style: italic;
-      color: var(--primary);
+      font-weight: 500;
+      color: var(--indigo);
     }
 
     .hero-sub {
@@ -121,22 +301,30 @@
       padding: 20px 28px;
       text-align: center;
       min-width: 110px;
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+    }
+    .stat-box:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-1px);
     }
 
     .stat-num {
       font-family: 'Playfair Display', serif;
-      font-size: 36px;
+      font-size: 38px;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--text);
       line-height: 1;
+      letter-spacing: -1px;
     }
 
     .stat-label {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 6px;
+      letter-spacing: 1.5px;
+      margin-top: 8px;
+      font-weight: 600;
     }
 
     /* ── REFRESH BAR ── */
@@ -158,14 +346,14 @@
       height: 8px;
       border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 0 0 rgba(74,222,128,0.4);
+      box-shadow: 0 0 0 0 rgba(16,185,129,0.5);
       animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
-      70% { box-shadow: 0 0 0 8px rgba(74,222,128,0); }
-      100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+      0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+      70% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+      100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
     }
 
     .refresh-progress {
@@ -179,7 +367,7 @@
 
     .refresh-fill {
       height: 100%;
-      background: var(--primary);
+      background: var(--text);
       border-radius: 10px;
       transition: width 1s linear;
       width: 100%;
@@ -195,24 +383,25 @@
     }
 
     .setup-inner {
-      background: linear-gradient(135deg, rgba(240,160,80,0.1), rgba(240,160,80,0.04));
-      border: 1px solid rgba(240,160,80,0.3);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: var(--card-radius);
       padding: 22px 28px;
       display: flex;
       align-items: flex-start;
       gap: 16px;
+      box-shadow: var(--shadow);
     }
 
     .setup-inner.hidden { display: none; }
 
     .setup-icon { font-size: 22px; flex-shrink: 0; }
     .setup-text { flex: 1; }
-    .setup-text strong { color: var(--accent); display: block; margin-bottom: 4px; }
+    .setup-text strong { color: var(--text); display: block; margin-bottom: 4px; }
     .setup-text span { font-size: 13px; color: var(--muted); line-height: 1.6; }
     .setup-text code {
-      background: rgba(124,134,245,0.15);
-      color: var(--primary);
+      background: var(--bg2);
+      color: var(--text);
       padding: 1px 6px;
       border-radius: 4px;
       font-size: 12px;
@@ -241,22 +430,23 @@
       width: 38px;
       height: 38px;
       border-radius: 10px;
-      background: rgba(124,134,245,0.15);
-      border: 1px solid rgba(124,134,245,0.3);
+      background: var(--text);
+      color: var(--surface);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--primary);
+      font-weight: 600;
+      font-size: 14px;
+      font-family: 'Outfit', sans-serif;
       flex-shrink: 0;
     }
 
     .section-title {
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
+      letter-spacing: -0.5px;
     }
 
     .section-count {
@@ -281,39 +471,34 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--card-radius);
-      padding: 26px;
+      padding: 28px;
       position: relative;
       overflow: hidden;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.25s ease;
+      box-shadow: var(--shadow);
     }
 
     .card:hover {
-      border-color: rgba(124,134,245,0.4);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--primary), transparent);
+      border-color: #d4d4d8;
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
     }
 
     .card-question {
       font-size: 13px;
       color: var(--muted);
-      line-height: 1.5;
-      margin-bottom: 20px;
+      line-height: 1.6;
+      margin-bottom: 22px;
       font-weight: 400;
     }
 
     .card-question strong {
       display: block;
       color: var(--text);
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 4px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
     }
 
     .chart-wrap {
@@ -348,7 +533,7 @@
       margin: 0 auto;
     }
 
-    footer a { color: var(--primary); text-decoration: none; }
+    footer a { color: var(--indigo); text-decoration: none; }
 
     /* ── ANIMATIONS ── */
     .card { animation: fadeUp 0.5s ease both; }
@@ -384,6 +569,16 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-glow"></div>
+  <svg class="floater f1" width="42" height="42" viewBox="0 0 42 42" fill="none">
+    <circle cx="21" cy="21" r="18" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="21" cy="21" r="4" fill="#6366f1"/>
+  </svg>
+  <svg class="floater f2" width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect x="4" y="4" width="24" height="24" rx="6" stroke="#f59e0b" stroke-width="1.5"/>
+  </svg>
+  <svg class="floater f3" width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <path d="M14 2 L26 14 L14 26 L2 14 Z" stroke="#10b981" stroke-width="1.5" fill="none"/>
+  </svg>
   <div class="hero-left">
     <div class="hero-tag">Trabajo de Fin de Grado · 2024–2025</div>
     <h1>Sadfishing y <em>Soledad Digital</em><br>en Jóvenes Universitarios</h1>
@@ -438,8 +633,31 @@
   <div class="chart-grid">
     <div class="card"><div class="card-question"><strong>¿Qué edad tienes?</strong></div><div class="chart-wrap pie-wrap"><canvas id="q1"></canvas></div></div>
     <div class="card"><div class="card-question"><strong>¿Con qué género te identificas?</strong></div><div class="chart-wrap pie-wrap"><canvas id="q2"></canvas></div></div>
-    <div class="card"><div class="card-question"><strong>¿En qué rama de estudios te encuentras?</strong></div><div class="chart-wrap pie-wrap"><canvas id="q3"></canvas></div></div>
-    <div class="card"><div class="card-question"><strong>¿En qué comunidad autónoma resides?</strong></div><div class="chart-wrap bar-wrap"><canvas id="q4"></canvas></div></div>
+    <div class="card polar"><div class="card-question"><strong>¿En qué rama de estudios te encuentras?</strong></div><div class="chart-wrap pie-wrap"><canvas id="q3"></canvas></div></div>
+  </div>
+
+  <div class="chart-grid wide" style="margin-top:22px;">
+    <div class="card"><div class="card-question"><strong>¿En qué comunidad autónoma resides?</strong> <span style="color:var(--muted);font-weight:400;">— Top 6</span></div><div class="chart-wrap bar-wrap"><canvas id="q4"></canvas></div></div>
+    <div style="display:flex; flex-direction:column; gap:18px;">
+      <div class="kpi-card" style="--accent-color: var(--indigo);">
+        <div class="kpi-label">Edad media</div>
+        <div class="kpi-value" id="kpi-edad">21<span class="kpi-suffix">años</span></div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="kpi-edad-bar" style="background:var(--indigo); width:0%;"></div></div>
+        <div class="kpi-trend">Rango más frecuente: <strong id="kpi-edad-rango" style="color:var(--text)">21–23</strong></div>
+      </div>
+      <div class="kpi-card" style="--accent-color: var(--green);">
+        <div class="kpi-label">Comunidad principal</div>
+        <div class="kpi-value" id="kpi-ccaa-pct">—<span class="kpi-suffix">%</span></div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="kpi-ccaa-bar" style="background:var(--green); width:0%;"></div></div>
+        <div class="kpi-trend">Mayoría en <strong id="kpi-ccaa-name" style="color:var(--text)">—</strong></div>
+      </div>
+      <div class="kpi-card" style="--accent-color: var(--amber);">
+        <div class="kpi-label">Rama predominante</div>
+        <div class="kpi-value" id="kpi-rama-pct">—<span class="kpi-suffix">%</span></div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="kpi-rama-bar" style="background:var(--amber); width:0%;"></div></div>
+        <div class="kpi-trend"><strong id="kpi-rama-name" style="color:var(--text)">—</strong></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -469,9 +687,8 @@
   <div class="chart-grid">
     <div class="card full-width">
       <div class="card-question"><strong>Indica con qué frecuencia te sientes de las siguientes maneras</strong> — Escala: Nunca / Casi nunca / A veces / Casi siempre / Siempre</div>
-      <div class="chart-wrap bar-wrap"><canvas id="q10_group" style="max-height:280px"></canvas></div>
+      <div class="chart-wrap bar-wrap"><canvas id="q_ucla" style="max-height:340px"></canvas></div>
     </div>
-    <div class="card"><div class="card-question"><strong>¿Sientes que las redes sociales cubren parte de tu necesidad de compañía o conexión?</strong></div><div class="chart-wrap pie-wrap"><canvas id="q12"></canvas></div></div>
   </div>
 </div>
 
@@ -519,12 +736,23 @@
    PALETA DE COLORES PARA LOS GRÁFICOS
    ════════════════════════════════════════════════════════════ */
 const PAL = [
-  '#7c86f5', '#f0a050', '#4ade80', '#f472b6',
-  '#2dd4bf', '#fb7185', '#a78bfa', '#facc15',
-  '#60a5fa', '#34d399'
+  '#18181b',  // casi negro
+  '#6366f1',  // índigo
+  '#10b981',  // esmeralda
+  '#f59e0b',  // ámbar
+  '#0ea5e9',  // sky
+  '#8b5cf6',  // violeta
+  '#f43f5e',  // rosa intenso
+  '#14b8a6',  // teal
+  '#a3a3a3',  // neutro
+  '#475569'   // slate
 ];
 
-const PAL_HOVER = PAL.map(c => c + 'cc');
+const PAL_HOVER = [
+  '#27272a', '#4f46e5', '#059669', '#d97706',
+  '#0284c7', '#7c3aed', '#e11d48', '#0d9488',
+  '#737373', '#334155'
+];
 
 /* ════════════════════════════════════════════════════════════
    DATOS DE RESPALDO (datos actuales de tu encuesta)
@@ -534,7 +762,7 @@ const DEFAULT_DATA = {
   q1:  { labels: ['Menos de 18','18–20','21–23','24–26','Más de 26'],       data: [1, 6, 35, 4, 0] },
   q2:  { labels: ['Hombre','Mujer','No binario','Prefiero no decirlo'],       data: [28, 17, 1, 0] },
   q3:  { labels: ['Artes y Humanidades','Ciencias Sociales y Jurídicas','Ciencias','Ingeniería y Arquitectura','Ciencias de la Salud'], data: [2, 29, 1, 9, 4] },
-  q4:  { labels: ['Comunidad de Madrid','Castilla y León','Andalucía','Principado de Asturias','Comunidad Foral de Navarra'], data: [31, 9, 3, 1, 1] },
+  q4:  { labels: ['Andalucía','Aragón','Principado de Asturias','Islas Baleares','Canarias','Cantabria','Castilla-La Mancha','Castilla y León','Cataluña','Extremadura','Galicia','Comunidad de Madrid','Región de Murcia','Comunidad Foral de Navarra','País Vasco','La Rioja','Comunidad Valenciana','Ceuta','Melilla'], data: [3,0,1,0,0,0,0,9,0,0,0,31,0,1,0,0,0,0,0] },
   q5:  { labels: ['No la uso','Menos de 1h','1–2h','2–4h','Más de 4h'],      data: [6, 7, 27, 4, 2] },
   q6:  { labels: ['No la uso','Menos de 1h','1–2h','2–4h','Más de 4h'],      data: [0, 17, 27, 2, 0] },
   q7:  { labels: ['Sí, muchas','Sí, algunas','No, ninguna'],                  data: [4, 24, 18] },
@@ -563,20 +791,99 @@ const DEFAULT_DATA = {
 /* ════════════════════════════════════════════════════════════
    OPCIONES GLOBALES DE CHART.JS
    ════════════════════════════════════════════════════════════ */
-Chart.defaults.color = '#7a89ab';
+Chart.defaults.color = '#71717a';
 Chart.defaults.font.family = 'Outfit';
+Chart.defaults.font.size = 12;
+
+// Pie chart relleno (sin agujero)
+const pieFull = (labels, data) => ({
+  type: 'pie',
+  data: {
+    labels,
+    datasets: [{
+      data,
+      backgroundColor: PAL.slice(0, data.length),
+      hoverBackgroundColor: PAL_HOVER.slice(0, data.length),
+      borderWidth: 3,
+      borderColor: '#ffffff',
+      hoverOffset: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 16, boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'circle', font: { size: 11, weight: '500' } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+            const pct = total ? Math.round(ctx.parsed / total * 100) : 0;
+            return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+          }
+        }
+      }
+    },
+    animation: { duration: 900, easing: 'easeOutQuart' }
+  }
+});
+
+// Polar Area chart
+const polarDefaults = (labels, data) => ({
+  type: 'polarArea',
+  data: {
+    labels,
+    datasets: [{
+      data,
+      backgroundColor: PAL.slice(0, data.length).map(c => c + 'cc'),
+      borderColor: PAL.slice(0, data.length),
+      borderWidth: 2,
+      hoverBackgroundColor: PAL.slice(0, data.length),
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'circle', font: { size: 11, weight: '500' } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+            const pct = total ? Math.round(ctx.parsed.r / total * 100) : 0;
+            return ` ${ctx.label}: ${ctx.parsed.r} (${pct}%)`;
+          }
+        }
+      }
+    },
+    scales: {
+      r: {
+        ticks: { display: false },
+        grid: { color: 'rgba(0,0,0,0.06)' },
+        angleLines: { color: 'rgba(0,0,0,0.08)' }
+      }
+    },
+    animation: { duration: 1000, easing: 'easeOutQuart' }
+  }
+});
 
 const pieDefaults = (labels, data, title = '') => ({
   type: 'doughnut',
   data: {
     labels,
-    datasets: [{ data, backgroundColor: PAL.slice(0, data.length), hoverBackgroundColor: PAL_HOVER.slice(0, data.length), borderWidth: 0, hoverOffset: 6 }]
+    datasets: [{
+      data,
+      backgroundColor: PAL.slice(0, data.length),
+      hoverBackgroundColor: PAL_HOVER.slice(0, data.length),
+      borderWidth: 3,
+      borderColor: '#ffffff',
+      hoverOffset: 8,
+      hoverBorderWidth: 3
+    }]
   },
   options: {
     responsive: true,
-    cutout: '55%',
+    cutout: '60%',
     plugins: {
-      legend: { position: 'bottom', labels: { padding: 14, boxWidth: 12, font: { size: 11 } } },
+      legend: { position: 'bottom', labels: { padding: 16, boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'circle', font: { size: 11, weight: '500' } } },
       tooltip: {
         callbacks: {
           label: ctx => {
@@ -595,7 +902,15 @@ const barDefaults = (labels, data, horizontal = false) => ({
   type: 'bar',
   data: {
     labels,
-    datasets: [{ data, backgroundColor: PAL.slice(0, data.length), borderRadius: 6, borderWidth: 0, hoverBackgroundColor: PAL_HOVER.slice(0, data.length) }]
+    datasets: [{
+      data,
+      backgroundColor: PAL.slice(0, data.length),
+      borderRadius: 8,
+      borderWidth: 0,
+      hoverBackgroundColor: PAL_HOVER.slice(0, data.length),
+      barPercentage: 0.7,
+      categoryPercentage: 0.8
+    }]
   },
   options: {
     indexAxis: horizontal ? 'y' : 'x',
@@ -613,7 +928,7 @@ const barDefaults = (labels, data, horizontal = false) => ({
       }
     },
     scales: {
-      [horizontal ? 'x' : 'y']: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { font: { size: 11 } } },
+      [horizontal ? 'x' : 'y']: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 11 } } },
       [horizontal ? 'y' : 'x']: { grid: { display: false }, ticks: { font: { size: 11 } } }
     },
     animation: { duration: 800 }
@@ -641,9 +956,29 @@ function parseJSON(json) {
     rows.forEach(row => {
       const val = norm(row[colIdx] || '');
       if (!val) return;
+      // 1) Exact match
       let idx = normLabels.indexOf(val);
-      if (idx === -1) idx = normLabels.findIndex(l => val.startsWith(l.slice(0, 8)) && l.length >= 4);
-      if (idx === -1) idx = normLabels.findIndex(l => l.startsWith(val.slice(0, 8)) && val.length >= 4);
+      // 2) Label is contained in value (e.g. "comunidad de madrid" in "comunidad de madrid (madrid)")
+      if (idx === -1) {
+        // Find the LONGEST matching label that is contained in the value
+        let bestLen = 0;
+        normLabels.forEach((l, i) => {
+          if (l.length >= 4 && val.includes(l) && l.length > bestLen) {
+            bestLen = l.length;
+            idx = i;
+          }
+        });
+      }
+      // 3) Value is contained in label (label more verbose than value)
+      if (idx === -1) {
+        let bestLen = 0;
+        normLabels.forEach((l, i) => {
+          if (val.length >= 4 && l.includes(val) && val.length > bestLen) {
+            bestLen = val.length;
+            idx = i;
+          }
+        });
+      }
       if (idx !== -1) counts[idx]++;
     });
     return counts;
@@ -702,6 +1037,38 @@ function parseJSON(json) {
   });
   document.getElementById('total-responses').textContent = total;
 
+  // ── KPIs dinámicos del Bloque 1 ──
+  const totalEdad = d.q1.data.reduce((a,b) => a+b, 0);
+  const idxEdadMax = d.q1.data.indexOf(Math.max(...d.q1.data));
+  const pctEdadMax = totalEdad ? Math.round(d.q1.data[idxEdadMax] / totalEdad * 100) : 0;
+  const elEdad = document.getElementById('kpi-edad');
+  const elEdadRango = document.getElementById('kpi-edad-rango');
+  const elEdadBar = document.getElementById('kpi-edad-bar');
+  if (elEdad) elEdad.innerHTML = pctEdadMax + '<span class="kpi-suffix">%</span>';
+  if (elEdadRango) elEdadRango.textContent = d.q1.labels[idxEdadMax];
+  if (elEdadBar) elEdadBar.style.width = pctEdadMax + '%';
+
+  const q4ValsForKpi = d.q4.data;
+  const totalCcaa = q4ValsForKpi.reduce((a,b) => a+b, 0);
+  const idxCcaaMax = q4ValsForKpi.indexOf(Math.max(...q4ValsForKpi));
+  const pctCcaaMax = totalCcaa ? Math.round(q4ValsForKpi[idxCcaaMax] / totalCcaa * 100) : 0;
+  const elCcaaPct = document.getElementById('kpi-ccaa-pct');
+  const elCcaaName = document.getElementById('kpi-ccaa-name');
+  const elCcaaBar = document.getElementById('kpi-ccaa-bar');
+  if (elCcaaPct) elCcaaPct.innerHTML = pctCcaaMax + '<span class="kpi-suffix">%</span>';
+  if (elCcaaName) elCcaaName.textContent = d.q4.labels[idxCcaaMax];
+  if (elCcaaBar) elCcaaBar.style.width = pctCcaaMax + '%';
+
+  const totalRama = d.q3.data.reduce((a,b) => a+b, 0);
+  const idxRamaMax = d.q3.data.indexOf(Math.max(...d.q3.data));
+  const pctRamaMax = totalRama ? Math.round(d.q3.data[idxRamaMax] / totalRama * 100) : 0;
+  const elRamaPct = document.getElementById('kpi-rama-pct');
+  const elRamaName = document.getElementById('kpi-rama-name');
+  const elRamaBar = document.getElementById('kpi-rama-bar');
+  if (elRamaPct) elRamaPct.innerHTML = pctRamaMax + '<span class="kpi-suffix">%</span>';
+  if (elRamaName) elRamaName.textContent = d.q3.labels[idxRamaMax];
+  if (elRamaBar) elRamaBar.style.width = pctRamaMax + '%';
+
   return d;
 }
 
@@ -718,54 +1085,62 @@ function createCharts(d) {
   charts.q1 = new Chart(document.getElementById('q1'), pieDefaults(d.q1.labels, d.q1.data));
   charts.q2 = new Chart(document.getElementById('q2'), pieDefaults(d.q2.labels, d.q2.data));
   charts.q3 = new Chart(document.getElementById('q3'), pieDefaults(d.q3.labels, d.q3.data));
-  charts.q4 = new Chart(document.getElementById('q4'), barDefaults(d.q4.labels, d.q4.data, true));
+  // Comunidades autónomas: top 6 con más respuestas (dinámico)
+  const q4Pairs = d.q4.labels.map((l, i) => ({ label: l, val: d.q4.data[i] }));
+  q4Pairs.sort((a, b) => b.val - a.val);
+  const q4Top = q4Pairs.filter(p => p.val > 0).slice(0, 6);
+  const q4TopLabels = q4Top.map(p => p.label);
+  const q4TopData = q4Top.map(p => p.val);
+  charts.q4 = new Chart(document.getElementById('q4'), barDefaults(q4TopLabels, q4TopData, true));
 
   // ── Bloque 2 ──
-  charts.q5 = new Chart(document.getElementById('q5'), pieDefaults(d.q5.labels, d.q5.data));
-  charts.q6 = new Chart(document.getElementById('q6'), pieDefaults(d.q6.labels, d.q6.data));
+  charts.q5 = new Chart(document.getElementById('q5'), pieFull(d.q5.labels, d.q5.data));
+  charts.q6 = new Chart(document.getElementById('q6'), pieFull(d.q6.labels, d.q6.data));
   charts.q7 = new Chart(document.getElementById('q7'), pieDefaults(d.q7.labels, d.q7.data));
   charts.q8 = new Chart(document.getElementById('q8'), pieDefaults(d.q8.labels, d.q8.data));
-  charts.q9 = new Chart(document.getElementById('q9'), pieDefaults(d.q9.labels, d.q9.data));
+  charts.q9 = new Chart(document.getElementById('q9'), pieFull(d.q9.labels, d.q9.data));
 
-  // ── Bloque 3 — gráfico agrupado ──
-  charts.q10_group = new Chart(document.getElementById('q10_group'), {
+  // ── Bloque 3 — UCLA: 3 preguntas × 5 categorías (estilo Google Forms) ──
+  charts.q_ucla = new Chart(document.getElementById('q_ucla'), {
     type: 'bar',
     data: {
-      labels: ['Nunca','Casi nunca','A veces','Casi siempre','Siempre'],
+      labels: [['¿Con qué frecuencia sientes', 'que te falta compañía?'], ['¿Con qué frecuencia sientes que no tienes', 'a nadie a quien recurrir cuando lo necesitas?'], ['¿Sientes que las redes sociales cubren parte', 'de esa necesidad de compañía o conexión?']],
       datasets: [
-        { label: 'Falta compañía',     data: d.q10.data, backgroundColor: PAL[0], borderRadius: 5, borderWidth: 0 },
-        { label: 'Nadie a quien recurrir', data: d.q11.data, backgroundColor: PAL[1], borderRadius: 5, borderWidth: 0 },
+        { label: 'Nunca',        data: [d.q10.data[0], d.q11.data[0], d.q12.data[0]], backgroundColor: '#e5e5e7', borderRadius: 6, borderWidth: 0 },
+        { label: 'Casi nunca',   data: [d.q10.data[1], d.q11.data[1], d.q12.data[1]], backgroundColor: '#a1a1aa', borderRadius: 6, borderWidth: 0 },
+        { label: 'A veces',      data: [d.q10.data[2], d.q11.data[2], d.q12.data[2]], backgroundColor: '#6366f1', borderRadius: 6, borderWidth: 0 },
+        { label: 'Casi siempre', data: [d.q10.data[3], d.q11.data[3], d.q12.data[3]], backgroundColor: '#f59e0b', borderRadius: 6, borderWidth: 0 },
+        { label: 'Siempre',      data: [d.q10.data[4], d.q11.data[4], d.q12.data[4]], backgroundColor: '#f43f5e', borderRadius: 6, borderWidth: 0 },
       ]
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'top', labels: { padding: 16, font: { size: 12 } } },
+        legend: { position: 'top', labels: { padding: 18, boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'circle', font: { size: 12, weight: '500' } } },
         tooltip: { mode: 'index', intersect: false }
       },
       scales: {
-        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { font: { size: 11 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+        y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 11 } }, beginAtZero: true },
+        x: { grid: { display: false }, ticks: { font: { size: 12, weight: '500' }, color: '#18181b' } }
       },
       animation: { duration: 800 }
     }
   });
 
-  charts.q12 = new Chart(document.getElementById('q12'), pieDefaults(d.q12.labels, d.q12.data));
-
   // ── Bloque 4 ──
   charts.q13 = new Chart(document.getElementById('q13'), pieDefaults(d.q13.labels, d.q13.data));
-  charts.q14 = new Chart(document.getElementById('q14'), pieDefaults(d.q14.labels, d.q14.data));
+  charts.q14 = new Chart(document.getElementById('q14'), barDefaults(d.q14.labels, d.q14.data, true));
   charts.q15 = new Chart(document.getElementById('q15'), pieDefaults(d.q15.labels, d.q15.data));
   charts.q16 = new Chart(document.getElementById('q16'), pieDefaults(d.q16.labels, d.q16.data));
   charts.q17 = new Chart(document.getElementById('q17'), pieDefaults(d.q17.labels, d.q17.data));
   charts.q18 = new Chart(document.getElementById('q18'), pieDefaults(d.q18.labels, d.q18.data));
-  charts.q19 = new Chart(document.getElementById('q19'), pieDefaults(d.q19.labels, d.q19.data));
+  charts.q19 = new Chart(document.getElementById('q19'), pieFull(d.q19.labels, d.q19.data));
 
   // ── Bloque 5 ──
   charts.q20 = new Chart(document.getElementById('q20'), pieDefaults(d.q20.labels, d.q20.data));
   charts.q21 = new Chart(document.getElementById('q21'), pieDefaults(d.q21.labels, d.q21.data));
-  charts.q22 = new Chart(document.getElementById('q22'), pieDefaults(d.q22.labels, d.q22.data));
+  charts.q22 = new Chart(document.getElementById('q22'), pieFull(d.q22.labels, d.q22.data));
   charts.q23 = new Chart(document.getElementById('q23'), pieDefaults(d.q23.labels, d.q23.data));
   charts.q24 = new Chart(document.getElementById('q24'), barDefaults(d.q24.labels, d.q24.data, true));
 }
@@ -813,14 +1188,24 @@ function parseCSV(text) {
     dataRows.forEach(row => {
       const val = norm(row[colIdx] || '');
       if (!val) return;
-      // 1) Exact match normalizado
       let idx = normLabels.indexOf(val);
-      // 2) El valor de la hoja empieza con la etiqueta (etiqueta abreviada)
-      if (idx === -1) idx = normLabels.findIndex(l => val.startsWith(l.slice(0, 8)) && l.length >= 4);
-      // 3) La etiqueta empieza con el valor (valor abreviado)
-      if (idx === -1) idx = normLabels.findIndex(l => l.startsWith(val.slice(0, 8)) && val.length >= 4);
+      if (idx === -1) {
+        let bestLen = 0;
+        normLabels.forEach((l, i) => {
+          if (l.length >= 4 && val.includes(l) && l.length > bestLen) {
+            bestLen = l.length; idx = i;
+          }
+        });
+      }
+      if (idx === -1) {
+        let bestLen = 0;
+        normLabels.forEach((l, i) => {
+          if (val.length >= 4 && l.includes(val) && val.length > bestLen) {
+            bestLen = val.length; idx = i;
+          }
+        });
+      }
       if (idx !== -1) counts[idx]++;
-      else console.warn('⚠️ No match para:', row[colIdx], '| Labels:', labels);
     });
     return counts;
   }
